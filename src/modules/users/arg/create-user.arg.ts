@@ -4,8 +4,14 @@ import { BaseQueryArgs } from 'src/common/base.args';
 @InputType()
 export class CreateUser extends BaseQueryArgs {
   @Field(() => String, { nullable: true })
-  username: string;
+  username?: string;
+
+  @Field(() => String, { nullable: true })
+  email?: string;
+
+  @Field(() => String, { nullable: true })
+  password?: string;
 
   @Field(() => Float, { nullable: true })
-  age: number;
+  age?: number;
 }

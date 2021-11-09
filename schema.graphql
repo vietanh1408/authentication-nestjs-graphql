@@ -11,6 +11,7 @@ type UserDTO {
   updatedBy: String
   username: String!
   age: Int!
+  email: String!
   password: String!
 }
 
@@ -19,6 +20,13 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type AuthDTO {
+  id: String!
+  username: String!
+  email: String!
+  password: String!
+}
+
 type Query {
   users: [UserDTO!]!
   user(id: String!): UserDTO!
@@ -26,9 +34,19 @@ type Query {
 
 type Mutation {
   create(input: CreateUser!): UserDTO!
+  register(input: AuthRegisterArgs!): AuthDTO!
 }
 
 input CreateUser {
   username: String
+  email: String
+  password: String
   age: Float
+}
+
+input AuthRegisterArgs {
+  username: String!
+  email: String!
+  password: String!
+  age: Float!
 }

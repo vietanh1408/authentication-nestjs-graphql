@@ -11,4 +11,7 @@ export class UserDTO extends BaseDTO {
 
   @Field(() => String)
   password: string;
+
+  @Field(() => String)
+  email: string;
 }
