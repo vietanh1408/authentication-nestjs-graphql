@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './modules/users/users.module';
+import { AuthService } from './modules/auth/auth.service';
+import { AuthModule } from './modules/auth/auth.module';
+import { BaseModule } from './common/base.modult';
 
 @Module({
   imports: [
@@ -18,7 +21,8 @@ import { UsersModule } from './users/users.module';
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    UsersModule,
+    ...BaseModule,
   ],
+  providers: [AuthService],
 })
 export class AppModule {}
