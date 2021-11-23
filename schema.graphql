@@ -11,8 +11,8 @@ type UserDTO {
   updatedBy: String
   username: String!
   age: Int!
-  email: String!
   password: String!
+  email: String!
 }
 
 """

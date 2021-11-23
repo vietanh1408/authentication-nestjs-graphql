@@ -1,17 +1,23 @@
+import { Field, Float, ObjectType } from '@nestjs/graphql';
 import { BaseEntity } from 'src/common/base.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('users')
+@Entity('USERS')
+@ObjectType('Users')
 export class UserEntity extends BaseEntity {
-  @Column()
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'USER_NAME' })
   username: string;
 
-  @Column()
+  @Field(() => Float, { nullable: true })
+  @Column({ name: 'AGE' })
   age: number;
 
-  @Column()
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'PASSWORD' })
   password: string;
 
-  @Column()
+  @Field(() => String, { nullable: true })
+  @Column({ name: 'EMAIL' })
   email: string;
 }
