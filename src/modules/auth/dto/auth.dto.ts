@@ -1,7 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { BaseDTO } from 'src/common/base.dto';
 
 @ObjectType()
-export class AuthDTO {
+export class AuthDTO extends BaseDTO {
   @Field()
   id: string;
 
@@ -13,4 +14,10 @@ export class AuthDTO {
 
   @Field()
   password: string;
+}
+
+@ObjectType()
+export class AuthResultDTO {
+  @Field(() => String, { nullable: true })
+  access_token?: string;
 }

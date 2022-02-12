@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class AuthRegisterArgs {
@@ -11,6 +11,18 @@ export class AuthRegisterArgs {
   @Field()
   password: string;
 
+  @Field(() => Int, { nullable: true })
+  age?: number;
+}
+
+@InputType()
+export class AuthLoginArgs {
   @Field()
-  age: number;
+  username?: string;
+
+  @Field()
+  email?: string;
+
+  @Field()
+  password: string;
 }
