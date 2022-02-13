@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-export const ShowError = (errorCode) => {
+export const ShowError = (errorCode: string, status?: HttpStatus) => {
   throw new HttpException(
     {
       message: errorCode,
     },
-    HttpStatus.CONFLICT,
+    status ?? HttpStatus.CONFLICT,
   );
 };

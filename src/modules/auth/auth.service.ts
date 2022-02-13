@@ -1,16 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
+import { secretToken } from 'src/constants/environment';
+import {
+  DUPLICATE_EMAIL,
+  DUPLICATE_USERNAME,
+  NOT_EXIST_USER_NAME,
+  INVALID_PASSWORD,
+} from 'src/constants/error';
 import { ShowError } from 'src/extensions/error';
 import { UsersService } from '../users/users.service';
 import { AuthLoginArgs, AuthRegisterArgs } from './arg/auth-register.arg';
 import { AuthResultDTO } from './dto/auth.dto';
-import jwt from 'jsonwebtoken';
+
 @Injectable()
 export class AuthService {
   constructor(private usersService: UsersService) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
+    const user = await this.usersService.findOne({ username });
     const isValidatePassword = await bcrypt.compare(pass, user.password);
     if (user && isValidatePassword) {
       const { password, ...result } = user;
@@ -29,14 +37,14 @@ export class AuthService {
       );
 
       if (checkEmail) {
-        ShowError('Email đã tồn tại');
+        ShowError(DUPLICATE_EMAIL);
       }
       if (checkUsername) {
-        ShowError('Tên đăng nhập đã tồn tại');
+        ShowError(DUPLICATE_USERNAME);
       }
 
       // has password
-      const salt = await bcrypt.genSalt();
+      const salt = await bcrypt.genSalt(10);
 
       const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -47,14 +55,16 @@ export class AuthService {
         password: hashedPassword,
       });
 
+      const { password: pass, ...res } = user || {};
+
       // create access token
-      // const accessToken = await this.createAccessToken(
-      //   user.id,
-      //   'SECRET_TOKEN_12314123',
-      // );
+      const accessToken = await this.createAccessToken(
+        { id: user.id, username: user.username },
+        secretToken,
+      );
 
       return {
-        access_token: '',
+        access_token: accessToken,
       };
     } catch (e) {
       ShowError(e.message);
@@ -63,37 +73,41 @@ export class AuthService {
 
   async login(input: AuthLoginArgs): Promise<AuthResultDTO> {
     try {
-      const { email, password, username } = input || {};
+      const { password, username } = input || {};
 
-      console.log('email....', email);
+      const user = await this.usersService.findOne({ username });
 
-      if (email) {
-        const checkEmail = await this.usersService.checkExistEmail(email);
-        if (!checkEmail) {
-          ShowError('Email không tồn tại');
-        }
+      if (!user) {
+        ShowError(NOT_EXIST_USER_NAME);
       }
-      if (username) {
-        const checkUsername = await this.usersService.checkExistUsername(
-          username,
-        );
 
-        if (!checkUsername) {
-          ShowError('Tên đăng nhập không tồn tại');
-        }
+      const validPassword = await bcrypt.compare(password, user.password);
+
+      if (!validPassword) {
+        ShowError(INVALID_PASSWORD);
       }
+
+      const accessToken = await this.createAccessToken(
+        { id: user.id, username: user.username },
+        secretToken,
+      );
 
       return {
-        access_token: 'token',
+        access_token: accessToken,
       };
     } catch (e) {
       ShowError(e.message);
     }
   }
 
-  async createAccessToken(id: string, secretToken: string): Promise<string> {
+  async createAccessToken(
+    { id, username }: { id: string; username: string },
+    secretToken: string,
+  ): Promise<string> {
     try {
-      return await jwt.sign({ userId: id }, secretToken, { expiresIn: '90d' });
+      return await jwt.sign({ userId: id, username }, secretToken, {
+        expiresIn: '30d',
+      });
     } catch (e) {
       ShowError(e.message);
     }

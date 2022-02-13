@@ -4,14 +4,14 @@ import { BaseDTO } from 'src/common/base.dto';
 @ObjectType()
 export class UserDTO extends BaseDTO {
   @Field(() => String)
-  username: string;
+  username?: string;
 
   @Field(() => Int)
-  age: number;
+  age?: number;
 
   @Field(() => String)
-  password: string;
+  password?: string;
 
   @Field(() => String)
-  email: string;
+  email?: string;
 }

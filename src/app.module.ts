@@ -10,6 +10,7 @@ import { UsersResolver } from './modules/users/users.resolver';
   imports: [
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.graphql',
+      context: ({ req }) => ({ headers: req.headers }),
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -28,6 +29,6 @@ import { UsersResolver } from './modules/users/users.resolver';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes(UsersResolver);
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

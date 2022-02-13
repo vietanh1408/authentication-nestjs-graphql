@@ -2,6 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Users {
+  id: ID!
+  createdBy: String
+  updatedBy: String
+  username: String
+  age: Float
+  password: String
+  email: String
+}
+
 type UserDTO {
   id: ID!
   createdAt: DateTime
@@ -103,7 +113,7 @@ type UserDTOAggregateResponse {
 }
 
 type AuthDTO {
-  id: String!
+  id: ID!
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
@@ -116,6 +126,7 @@ type AuthDTO {
 
 type AuthResultDTO {
   access_token: String
+  user: Users
 }
 
 type AuthDTODeleteResponse {
@@ -488,7 +499,6 @@ input AuthRegisterArgs {
 
 input AuthLoginArgs {
   username: String
-  email: String
   password: String!
 }
 

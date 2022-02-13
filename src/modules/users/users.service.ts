@@ -17,12 +17,16 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  async findOne(id: string): Promise<User> {
-    return this.usersRepository.findOne({
+  async findOne(condition: Partial<UserDTO>): Promise<User> {
+    console.log('condition....,', condition);
+    const user = await this.usersRepository.findOne({
       where: {
-        id,
+        ...condition,
       },
+      loadEagerRelations: false,
     });
+
+    return user;
   }
 
   async create(input: CreateUser): Promise<User> {
