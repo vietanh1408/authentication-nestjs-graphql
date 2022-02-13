@@ -8,7 +8,7 @@ export class LoggerMiddleware implements NestMiddleware {
     const authHeader = req.header('Authorization');
     const token = authHeader && authHeader.split(' ')[1];
     if (!token) {
-      console.log('Bạn chưa đăng nhập, vui lòng đăng nhập để tiếp tục....');
+      // console.log('Bạn chưa đăng nhập, vui lòng đăng nhập để tiếp tục....');
     }
 
     try {

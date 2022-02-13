@@ -17,12 +17,12 @@ export class AuthRegisterArgs {
 
 @InputType()
 export class AuthLoginArgs {
-  @Field()
+  @Field(() => String, { nullable: true })
   username?: string;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   email?: string;
 
-  @Field()
+  @Field(() => String)
   password: string;
 }

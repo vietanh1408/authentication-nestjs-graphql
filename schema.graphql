@@ -379,7 +379,7 @@ type Mutation {
   deleteOneUserDTO(input: DeleteOneUserDTOInput!): UserDTODeleteResponse!
   deleteManyUserDTOS(input: DeleteManyUserDTOSInput!): DeleteManyResponse!
   register(input: AuthRegisterArgs!): AuthResultDTO!
-  login(input: AuthRegisterArgs!): AuthResultDTO!
+  login(input: AuthLoginArgs!): AuthResultDTO!
   createOneAuthDTO(input: CreateOneAuthDTOInput!): AuthDTO!
   createManyAuthDTOS(input: CreateManyAuthDTOSInput!): [AuthDTO!]!
   updateOneAuthDTO(input: UpdateOneAuthDTOInput!): AuthDTO!
@@ -484,6 +484,12 @@ input AuthRegisterArgs {
   email: String!
   password: String!
   age: Int
+}
+
+input AuthLoginArgs {
+  username: String
+  email: String
+  password: String!
 }
 
 input CreateOneAuthDTOInput {

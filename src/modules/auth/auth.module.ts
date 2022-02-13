@@ -11,8 +11,10 @@ import { UsersService } from '../users/users.service';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { AuthDTO } from './dto/auth.dto';
+import { PassportModule } from '@nestjs/passport';
+import { LocalStrategy } from './local.strategy';
+
 @Module({
-  providers: [AuthService, UsersService, AuthResolver],
   imports: [
     NestjsQueryGraphQLModule.forFeature({
       imports: [
@@ -29,7 +31,9 @@ import { AuthDTO } from './dto/auth.dto';
         },
       ],
     }),
+    PassportModule,
   ],
+  providers: [AuthService, UsersService, AuthResolver, LocalStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

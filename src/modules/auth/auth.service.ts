@@ -9,6 +9,16 @@ import jwt from 'jsonwebtoken';
 export class AuthService {
   constructor(private usersService: UsersService) {}
 
+  async validateUser(username: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOne(username);
+    const isValidatePassword = await bcrypt.compare(pass, user.password);
+    if (user && isValidatePassword) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+
   async register(input: AuthRegisterArgs): Promise<AuthResultDTO> {
     try {
       const { email, password, username } = input || {};
@@ -51,22 +61,31 @@ export class AuthService {
     }
   }
 
-  async login(input: AuthLoginArgs): Promise<any> {
+  async login(input: AuthLoginArgs): Promise<AuthResultDTO> {
     try {
       const { email, password, username } = input || {};
 
-      const checkEmail = await this.usersService.checkExistEmail(email);
-      const checkUsername = await this.usersService.checkExistUsername(
-        username,
-      );
+      console.log('email....', email);
 
-      if (!checkEmail) {
-        ShowError('Email không tồn tại');
+      if (email) {
+        const checkEmail = await this.usersService.checkExistEmail(email);
+        if (!checkEmail) {
+          ShowError('Email không tồn tại');
+        }
+      }
+      if (username) {
+        const checkUsername = await this.usersService.checkExistUsername(
+          username,
+        );
+
+        if (!checkUsername) {
+          ShowError('Tên đăng nhập không tồn tại');
+        }
       }
 
-      if (!checkUsername) {
-        ShowError('Tên đăng nhập không tồn tại');
-      }
+      return {
+        access_token: 'token',
+      };
     } catch (e) {
       ShowError(e.message);
     }
